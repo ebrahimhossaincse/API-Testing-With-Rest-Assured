@@ -1,11 +1,11 @@
 {
-    "firstname": "Marcelino",
-    "additionalneeds": "Reprehenderit omnis et et error laboriosam modi veniam.",
+    "firstname": "Clinton",
+    "additionalneeds": "Fugiat molestiae id aut labore eius.",
     "bookingdates": {
-        "checkin": "2025-01-26",
-        "checkout": "2025-02-03"
+        "checkin": "2025-01-27",
+        "checkout": "2025-02-05"
     },
-    "totalprice": 480,
+    "totalprice": 111,
     "depositpaid": false,
-    "lastname": "Dickens"
+    "lastname": "Tromp"
 }
