@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 
 public class WriteJson {
 
-    @Test
     public void writeJson() {
         Faker faker = new Faker();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

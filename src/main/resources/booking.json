@@ -1,11 +1,11 @@
 {
-    "firstname": "Torrie",
-    "additionalneeds": "Consectetur ad sapiente voluptatem ad ipsam.",
+    "firstname": "Blake",
+    "additionalneeds": "Exercitationem dolorum eos ad nihil nam vel.",
     "bookingdates": {
-        "checkin": "2025-01-26",
-        "checkout": "2025-01-31"
+        "checkin": "2025-01-30",
+        "checkout": "2025-02-07"
     },
-    "totalprice": 356,
+    "totalprice": 276,
     "depositpaid": false,
-    "lastname": "Senger"
+    "lastname": "Strosin"
 }

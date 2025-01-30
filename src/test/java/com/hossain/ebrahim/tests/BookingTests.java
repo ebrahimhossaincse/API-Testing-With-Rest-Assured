@@ -3,6 +3,7 @@ package com.hossain.ebrahim.tests;
 import com.hossain.ebrahim.api.endpoinds.AuthEndpoint;
 import com.hossain.ebrahim.api.endpoinds.BookingEndpoint;
 import com.hossain.ebrahim.api.utils.RequestBodyBuilder;
+import com.hossain.ebrahim.api.utils.WriteJson;
 import com.hossain.ebrahim.model.Booking;
 import io.restassured.response.Response;
 import org.testng.annotations.BeforeClass;
@@ -15,18 +16,16 @@ public class BookingTests {
     private static String token;
     private int bookingId;
     private Booking booking;
+    private WriteJson writeJson;
 
     @BeforeClass
     public void setup() {
         // Setup the booking endpoint
         bookingEndpoint = new BookingEndpoint();
 
-        // Create a token for authenticated requests
-        String authBody = RequestBodyBuilder.createAuthBody("admin", "password123");
-        Response authResponse = new AuthEndpoint().createToken(authBody);
-        token = authResponse.jsonPath().getString("token");
 
         // Read booking from JSON file
+        writeJson = new WriteJson();
         booking = RequestBodyBuilder.readBookingFromJson();
 
         // Ensure booking data is not null
@@ -35,8 +34,17 @@ public class BookingTests {
         }
     }
 
+    public void fetchToken() {
+        // Create a token for authenticated requests
+        String authBody = RequestBodyBuilder.createAuthBody();
+        Response authResponse = new AuthEndpoint().createToken(authBody);
+        token = authResponse.jsonPath().getString("token");
+        System.out.println("token: "+token);
+    }
+
     @Test(priority = 1)
     public void testCreateBooking() {
+        writeJson.writeJson();
         // Create a booking by sending a POST request
         String requestBody = RequestBodyBuilder.createBookingBody(booking);
         Response response = bookingEndpoint.createBooking(requestBody);
@@ -86,4 +94,35 @@ public class BookingTests {
                 .body("additionalneeds", equalTo(booking.getAdditionalneeds()));
     }
 
+    @Test(priority = 3)
+    public void testUpdateBooking() {
+        writeJson.writeJson();  // Generate new booking data for update
+        fetchToken();
+
+        // Read the new booking data from JSON file
+        booking = RequestBodyBuilder.readBookingFromJson();
+
+        // Ensure the updated booking data is not null
+        if (booking == null) {
+            throw new RuntimeException("Failed to read updated booking data from JSON file.");
+        }
+
+        // Update the booking by sending a PUT request
+        String requestBody = RequestBodyBuilder.createUpdateBookingBody(booking, token);
+        Response response = bookingEndpoint.updateBooking(bookingId, requestBody, token);
+
+        // Log the updated booking response for debugging
+        System.out.println("Updated Booking Response: " + response.asString());
+
+        // Validate the response
+        response.then()
+                .statusCode(200)  // Check if the status code is 200 OK
+                .body("firstname", equalTo(booking.getFirstname()))
+                .body("lastname", equalTo(booking.getLastname()))
+                .body("totalprice", equalTo(booking.getTotalprice()))
+                .body("depositpaid", equalTo(booking.isDepositpaid()))
+                .body("bookingdates.checkin", equalTo(booking.getBookingdates().getCheckin()))
+                .body("bookingdates.checkout", equalTo(booking.getBookingdates().getCheckout()))
+                .body("additionalneeds", equalTo(booking.getAdditionalneeds()));
+    }
 }

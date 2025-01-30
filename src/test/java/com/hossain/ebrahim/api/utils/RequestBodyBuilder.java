@@ -11,7 +11,17 @@ public class RequestBodyBuilder {
     private static final String BOOKING_JSON_PATH = "src/main/resources/booking.json";
 
     // Method to create a request body for authentication
-    public static String createAuthBody(String username, String password) {
+    public static String createAuthBody() {
+        String username = ConfigReader.getProperty("username");
+        String password = ConfigReader.getProperty("password");
+
+        if (username == null || password == null) {
+            throw new RuntimeException("Username or Password is not set in the configuration file.");
+        }
+
+        System.out.println("Username: " + username);
+        System.out.println("Password: " + password);
+
         return String.format(
                 "{ \"username\": \"%s\", \"password\": \"%s\" }",
                 username, password
@@ -41,5 +51,23 @@ public class RequestBodyBuilder {
                 booking.getBookingdates().getCheckin(), booking.getBookingdates().getCheckout(),
                 booking.getAdditionalneeds()
         );
+    }
+
+    // Method to create a request body for updating a booking
+    public static String createUpdateBookingBody(Booking booking, String token) {
+        if (booking == null) {
+            throw new IllegalArgumentException("Invalid booking data!");
+        }
+
+        // Constructing the request body
+        String requestBody = String.format(
+                "{ \"firstname\": \"%s\", \"lastname\": \"%s\", \"totalprice\": %d, \"depositpaid\": %b, " +
+                        "\"bookingdates\": { \"checkin\": \"%s\", \"checkout\": \"%s\" }, \"additionalneeds\": \"%s\" }",
+                booking.getFirstname(), booking.getLastname(), booking.getTotalprice(), booking.isDepositpaid(),
+                booking.getBookingdates().getCheckin(), booking.getBookingdates().getCheckout(),
+                booking.getAdditionalneeds()
+        );
+        // Returning the request body
+        return requestBody;
     }
 }
