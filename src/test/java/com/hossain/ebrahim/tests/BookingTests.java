@@ -125,4 +125,16 @@ public class BookingTests {
                 .body("bookingdates.checkout", equalTo(booking.getBookingdates().getCheckout()))
                 .body("additionalneeds", equalTo(booking.getAdditionalneeds()));
     }
+
+    @Test(priority = 4)
+    public void testDeleteBooking() {
+        Response response = bookingEndpoint.deleteBooking(bookingId, token);
+
+        // Log the response for debugging
+        System.out.println("Get Booking Response: " + response.asString());
+
+        // Validate the response
+        response.then()
+                .statusCode(201); // Check if the status code is 200 OK
+    }
 }
